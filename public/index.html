@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Gallery</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+      }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+        max-width: 90%;
+        margin: auto;
+      }
+      .gallery-item {
+        text-align: center;
+      }
+      .gallery img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+      .number {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch("/images")
+          .then((response) => response.json())
+          .then((images) => {
+            const gallery = document.getElementById("gallery");
+            images.forEach((image, index) => {
+              const galleryItem = document.createElement("div");
+              galleryItem.className = "gallery-item";
+
+              const img = document.createElement("img");
+              img.src = `/images/${image}`;
+              img.alt = `Image ${index + 1}`;
+
+              const number = document.createElement("div");
+              number.className = "number";
+              number.textContent = index + 1;
+
+              galleryItem.appendChild(img);
+              galleryItem.appendChild(number);
+              gallery.appendChild(galleryItem);
+            });
+          })
+          .catch((error) => console.error("Error loading images:", error));
+      });
+    </script>
+  </body>
+</html>
